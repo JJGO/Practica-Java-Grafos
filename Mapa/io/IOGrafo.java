@@ -4,6 +4,8 @@
 
 //IOGrafo.java
 
+// Clase para el Input / Output de grafos
+
 package Mapa.io;
 
 import Mapa.dominio.Digrafo;

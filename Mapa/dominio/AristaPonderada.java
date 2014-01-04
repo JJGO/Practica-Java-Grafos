@@ -4,6 +4,9 @@
 
 // AristaPonderada.java
 
+// Arista direccional con un valor en coma flotante que define el peso o distancia entre los nodos que une.
+// Se uso es necesario para defincion de grafos ponderados
+
 package Mapa.dominio;
 
 public class AristaPonderada extends Arista 

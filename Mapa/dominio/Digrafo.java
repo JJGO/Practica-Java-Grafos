@@ -4,6 +4,11 @@
 
 // Digrafo.java
 
+// Estructura matematica formada por nodos y aristas dirigidas
+// Su posibles usos son elevados. 
+// Posee una implementacion de camino minimo mediante BFS(Breath First Search)
+// Necesita de Nodo, Arista y Camino
+
 package Mapa.dominio;
 
 import java.util.Collection;
@@ -74,6 +79,8 @@ public class Digrafo implements java.io.Serializable
         return aristas.get(origen).remove(arista);
     }
 
+    public boolean containsArista()
+
 
 
     public Iterator<Nodo> nodeIterator()
@@ -85,6 +92,7 @@ public class Digrafo implements java.io.Serializable
     {
         if(!nodos.contains(nodo))
             throw new IllegalArgumentException("Nodo no contenido en el grafo");
+
         ArrayList<Nodo> hijos = new ArrayList<Nodo>();
         Iterator<Arista> itAristas = this.aristas.get(nodo).iterator();
         while(itAristas.hasNext())
@@ -93,19 +101,16 @@ public class Digrafo implements java.io.Serializable
 
     }
 
-    // public Nodo[] getNodos()
-    // {
-    //     // String[] nombreNodos = new String[nodos.size()];
-    //     // Iterator<Nodos> itNodos = nodos.iterator();
-    //     // int i = 0;
-    //     // while(itNodos.hasNext())
-    //     // {
-    //     //     nombreNodos[i++] = itNodos.next().getNombre();
-    //     // }
-    //     // return nombreNodos;
-    //     return nodos.toArray();
-
-    // }
+    public Vector<String> getNombreNodos()
+    {
+        Vector<String> nombreNodos = new Vector();
+        Iterator<Nodos> itNodos = nodos.iterator();
+        while(itNodos.hasNext())
+        {
+            Vector.add(itNodos.next().getNombre());
+        }
+        return nombreNodos;
+    }
 
     public Camino getShortestPath(Nodo origen, Nodo destino)
     {

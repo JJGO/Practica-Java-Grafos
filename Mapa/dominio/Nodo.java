@@ -4,6 +4,9 @@
 
 // Nodo.java
 
+// Clase para definir nodos en un grafo. 
+// Cualquier clase heredada de la misma podra ser incluida en un digrafo.
+
 package Mapa.dominio;
 
 public class Nodo implements Comparable
@@ -25,6 +28,11 @@ public class Nodo implements Comparable
     public void setNombre(String nombre)
     {
         this.nombre = nombre;
+    }
+
+    public String representation()
+    {
+        this.toString();
     }
 
     // Override

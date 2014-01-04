@@ -4,6 +4,10 @@
 
 // Arista.java
 
+// Clase para la definicion de aristas direccionales en un grafo. 
+// Necesita de la clase nodo.
+// Cualquier clase heredada podra ser incluida como arista en un grafo.
+
 package Mapa.dominio;
 
 public class Arista implements java.io.Serializable

@@ -4,6 +4,10 @@
 
 // Camino.java
 
+// Clase formada por un conjunto de nodos ordenados por el orden de inclusion
+// Se utiliza para representar caminos en un grafo.
+// Hereda de ArrayList<Nodo> y expande su funcionalidad para el uso en grafos.
+
 package Mapa.dominio;
 
 import java.util.ArrayList;
@@ -21,6 +25,13 @@ public class Camino extends ArrayList<Nodo>
     {
         this();
         this.add(origen);
+    }
+
+    public Camino(Nodo origen,Nodo destino)
+    {
+        this();
+        this.add(origen);
+        this.add(destino)
     }
 
     public Nodo getInicio()

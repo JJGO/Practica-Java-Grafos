@@ -4,6 +4,10 @@
 
 // GrafoPonderado.java
 
+// Grafo formado por Nodos y Aristas ponderadas.
+// Redefine la busqueda BFS para tener en cuenta los pesos de las aristas.
+// No es direccional
+
 package Mapa.dominio;
 
 
@@ -90,7 +94,7 @@ public class GrafoPonderado extends Grafo
             return minimo;
     }
 
-    private double longitud(Camino camino)
+    public double longitud(Camino camino)
     {
         double length = 0.0;
         if(camino.size() > 1){

@@ -4,6 +4,8 @@
 
 // JCreator.java
 
+// Clase para la rapida creacion y customizacion de etiquetas, campos de texto y botones predefinidos.
+
 package Mapa.ui;
 
 import java.awt.*;
@@ -24,19 +26,19 @@ public class JCreator{
 
     }
 
-    // public static JTextField createTxtField()
-    // {
-    //     JTextField txt = new JTextField();
-    //     txt.setBackground( new Color(46,82,180));
-    //     txt.setForeground(Color.WHITE);
-    //     txt.setHorizontalAlignment(SwingConstants.CENTER);
-    //     txt.setPreferredSize(new Dimension(150,20));
-    //     txt.setMaximumSize(new Dimension(150,20));
-    //     txt.setMinimumSize(new Dimension(150,20));
-    //     txt.setFont(new Font("Arial",Font.PLAIN,11));
-    //     return txt;
+    public static JTextField createTextField()
+    {
+        JTextField txt = new JTextField();
+        txt.setBackground( new Color(46,82,180));
+        txt.setForeground(Color.WHITE);
+        txt.setHorizontalAlignment(SwingConstants.CENTER);
+        txt.setPreferredSize(new Dimension(150,20));
+        txt.setMaximumSize(new Dimension(150,20));
+        txt.setMinimumSize(new Dimension(150,20));
+        txt.setFont(new Font("Arial",Font.PLAIN,11));
+        return txt;
 
-    // }
+    }
 
     public static JButton createBtn(String name)
     {
