@@ -14,9 +14,19 @@ public class GrafoPonderado extends Grafo
 {
     private String unidades;
 
-    public GrafoPonderado(String unidades)
+    public GrafoPonderado(String nombre, String unidades)
     {
-        super();
+        super(nombre);
+        this.unidades = unidades;
+    }
+
+    public String getUnidades()
+    {
+        return this.unidades;
+    }
+
+    public void setUnidades(String unidades)
+    {
         this.unidades = unidades;
     }
 

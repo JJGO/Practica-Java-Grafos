@@ -9,14 +9,16 @@ package Mapa.dominio;
 public class Grafo extends Digrafo
 {
 
-    public Grafo()
-    {
-        super();
-    }
 
     public void addArista(Arista arista)
     {
         super.addArista(arista);
         super.addArista(arista.reverse());
+    }
+
+    public boolean removeArista(Arista arista)
+    {
+        super.removeArista(arista);
+        super.removeArista(arista.reverse());
     }
 }

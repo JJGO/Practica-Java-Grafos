@@ -18,13 +18,25 @@ import java.util.HashSet;
 public class Digrafo implements java.io.Serializable
 
 {
+    private String nombre;
     protected Set<Nodo> nodos;
     protected HashMap<Nodo,Set<Arista>> aristas;
 
-    public Digrafo()
+    public Digrafo(String nombre)
     {
+        this.setNombre(nombre);
         this.nodos = new TreeSet<Nodo>();
         this.aristas = new HashMap<Nodo,Set<Arista>>();
+    }
+
+    public String getNombre()
+    {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre)
+    {
+        this.nombre = nombre;
     }
 
     public boolean addNodo(Nodo nodo)
@@ -36,7 +48,7 @@ public class Digrafo implements java.io.Serializable
         return anadido;
     }
 
-    public void addArista(Arista arista)
+    public boolean addArista(Arista arista)
     {
         Nodo origen = arista.getOrigen();
         Nodo destino = arista.getDestino();
@@ -45,8 +57,24 @@ public class Digrafo implements java.io.Serializable
             throw new IllegalArgumentException("Nodo de origen y de destino iguales");
         this.addNodo(origen);
         this.addNodo(destino);
-        aristas.get(origen).add(arista);
+        return aristas.get(origen).add(arista);
     }
+
+    public boolean removeNodo(Nodo nodo)
+    {
+        boolean contenido = this.nodos.remove(nodo);
+        if(contenido)
+            this.aristas.remove(nodo);  // Destruye el HasMap asociado
+        return contenido;
+    }
+
+    public boolean removeArista(Arista arista)
+    {
+        Nodo origen = arista.getOrigen();
+        return aristas.get(origen).remove(arista);
+    }
+
+
 
     public Iterator<Nodo> nodeIterator()
     {
@@ -164,6 +192,8 @@ public class Digrafo implements java.io.Serializable
     public String toString()
     {
         StringBuilder s = new StringBuilder();
+        s.append(this.nombre);
+        s.append("\n");
         Iterator<Nodo> itNodos = nodos.iterator();
         while(itNodos.hasNext())
         {

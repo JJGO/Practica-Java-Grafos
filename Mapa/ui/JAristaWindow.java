@@ -14,7 +14,7 @@ import javax.swing.*;
 
 
 
-public class JAristaWindow extends JFrame
+public class JAristaWindow extends JDialog
 {
 
     JLabel lblOrigen;
@@ -28,7 +28,7 @@ public class JAristaWindow extends JFrame
     JButton     btnAceptar;
     JButton     btnCancelar;
 
-    public static Arista showInputDialog(Digrafo digrafo,String magnitud)
+    public static Arista showInputDialog(int, operation,String operationName, String message,String magnitud)
     {
         lblOrigen = new JLabel("Origen");
         lblDestino = new JLabel("Destino");
@@ -59,12 +59,13 @@ public class JAristaWindow extends JFrame
         this.add(pesoLayout);
         this.add(btnLayout);
 
-        
-
-
-
-
     }
+
+    public static Arista showInputDialog(int, operation,String operationName, String message)
+    {
+        this.showInputDialog(operation,operationName,message,"");
+    }
+
 }
 
 String datos[] = { “Uno”, “Dos”, “Tres”, “Cuatro”, “Cinco”};

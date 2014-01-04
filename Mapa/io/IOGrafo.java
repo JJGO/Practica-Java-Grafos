@@ -10,7 +10,7 @@ import Mapa.dominio.Digrafo;
 
 public class IOGrafo
 {
-    private static  String EXTENSION = ".obj";
+    private static  String EXTENSION = ".bin";
 
     public static Digrafo readFile(String nameFile)
     {
@@ -45,7 +45,8 @@ public class IOGrafo
         catch(FileNotFoundException e)
         {
             e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(null,"No se ha encontrado el fichero "+nameFile+EXTENSION);
+            javax.swing.JOptionPane.showMessageDialog(null,"No se ha encontrado el fichero "+nameFile+EXTENSION,"Error",JOptionPane.ERROR_MESSAGE);
+            
         }
         catch(ClassNotFoundException e)
         {
@@ -71,6 +72,7 @@ public class IOGrafo
         catch(FileNotFoundException e)
         {
             e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null,"No se ha encontrado el fichero "+nameFile+EXTENSION,"Error",JOptionPane.ERROR_MESSAGE);
         }
         catch(IOException e)
         {
