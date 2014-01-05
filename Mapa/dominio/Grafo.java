@@ -14,15 +14,22 @@ public class Grafo extends Digrafo
 {
 
 
-    public void addArista(Arista arista)
+    public Grafo(String nombre)
     {
-        super.addArista(arista);
-        super.addArista(arista.reverse());
+        super(nombre);
+    }
+
+    public boolean addArista(Arista arista)
+    {
+        boolean a = super.addArista(arista);
+        boolean b = super.addArista(arista.reverse());
+        return a && b;
     }
 
     public boolean removeArista(Arista arista)
     {
-        super.removeArista(arista);
-        super.removeArista(arista.reverse());
+        boolean a = super.removeArista(arista);
+        boolean b = super.removeArista(arista.reverse());
+        return a && b;
     }
 }

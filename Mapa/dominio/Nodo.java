@@ -9,7 +9,7 @@
 
 package Mapa.dominio;
 
-public class Nodo implements Comparable
+public class Nodo implements Comparable,java.io.Serializable
 {
     private String nombre;
 
@@ -32,7 +32,7 @@ public class Nodo implements Comparable
 
     public String representation()
     {
-        this.toString();
+        return this.toString();
     }
 
     // Override

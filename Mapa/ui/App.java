@@ -26,7 +26,7 @@ public class App
         Arista de = new AristaPonderada(d,e,1.0); //(int)(Math.random()*10) );
         Arista cd = new AristaPonderada(c,d,0.5); //(int)(Math.random()*10) );
 
-        GrafoPonderado g = new GrafoPonderado("u");
+        GrafoPonderado g = new GrafoPonderado("Puntos","Unidades");
 
         g.addArista(ab);
         g.addArista(ac);

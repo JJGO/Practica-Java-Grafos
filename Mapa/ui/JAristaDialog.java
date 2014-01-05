@@ -10,8 +10,13 @@
 
 package Mapa.ui;
 
+import Mapa.ui.JVentana;
+
+import Mapa.dominio.Nodo;
 import Mapa.dominio.Arista;
 import Mapa.dominio.AristaPonderada;
+
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -19,29 +24,36 @@ import javax.swing.*;
 
 
 
+
+
 public class JAristaDialog extends JDialog
 {
-     private JLabel lblTitulo;
+    private JLabel lblMensaje;
+    
+    private JLabel lblOrigen;
+    private JLabel lblDestino;
+    private JLabel lblPeso;
+    
+    private JComboBox   cbxOrigen;
+    private JComboBox   cbxDestino;
+    private JTextField  txtPeso;
+    
+    private JPanel pnlOrigen;
+    private JPanel pnlDestino;
+    private JPanel pnlPeso;
+    private JPanel pnlBoton;
+    
+    private JButton     btnOperacion;
 
-     private JLabel lblOrigen;
-     private JLabel lblDestino;
-     private JLabel lblPeso;
-
-     private JComboBox   cbxOrigen;
-     private JComboBox   cbxDestino;
-     private JTextField  txtPeso;
-
-     private JButton     btnOperacion;
-    // private JButton     btnCancelar;
-
-    private AristaPonderada arista;
+    private Arista arista;
 
     private int operation;
 
 
-    public JAristaDialog(Frame parent,Vector nodos,int operation, String operationName,String message,String magnitud)
+
+    public JAristaDialog(Frame parent,Vector<String> nodos,int operation, String operationName,String message,String magnitud)
     {
-        super(parent,"Arista");     //Ventana padre
+        super(parent,operationName + " Arista",Dialog.DEFAULT_MODALITY_TYPE);
 
         this.operation = operation;
 
@@ -50,43 +62,45 @@ public class JAristaDialog extends JDialog
         lblOrigen = JCreator.createLabel("Origen");
         lblDestino = JCreator.createLabel("Destino");
 
-        cbxOrigen = new JComboBox(nodos);
-        cbxDestino = new JComboBox(nodos);
+        cbxOrigen =  JCreator.createComboBox(nodos);
+        cbxDestino =  JCreator.createComboBox(nodos);
 
         btnOperacion = JCreator.createBtn(operationName);
         
-        FlowLayout origenLayout = new FlowLayout();
-        origenLayout.add(lblOrigen);
-        origenLayout.add(cbxOrigen);
+        pnlOrigen = new JPanel(new FlowLayout());
+        pnlOrigen.add(lblOrigen);
+        pnlOrigen.add(cbxOrigen);
 
-        FlowLayout destinoLayout = new FlowLayout();
-        destinoLayout.add(lblDestino);
-        destinoLayout.add(cbxDestino);
+        pnlDestino = new JPanel(new FlowLayout());
+        pnlDestino.add(lblDestino);
+        pnlDestino.add(cbxDestino);
 
+        pnlBoton = new JPanel(new FlowLayout());
+        pnlBoton.add(btnOperacion);
 
-        FlowLayout btnLayout = new FlowLayout();
-        btnLayout.add(btnOperacion);
+        
 
         if(this.isReducedDialog())
         {
             this.setLayout(new GridLayout(3,1));
-            this.add(origenLayout);
-            this.add(destinoLayout);
-            this.add(btnLayout);
+            this.add(pnlOrigen);
+            this.add(pnlDestino);
+            this.add(pnlBoton);
         }else{
 
             lblPeso = JCreator.createLabel(magnitud);
             txtPeso = JCreator.createTextField();
 
-            FlowLayout pesoLayout = new FlowLayout();
-            pesoLayout.add(lblPeso);
-            pesoLayout.add(txtPeso);
+            pnlPeso = new JPanel(new FlowLayout());
+            pnlPeso.add(lblPeso);
+            pnlPeso.add(txtPeso);
 
             this.setLayout(new GridLayout(4,1));
-            this.add(origenLayout);
-            this.add(destinoLayout);
-            this.add(pesoLayout);
-            this.add(btnLayout);
+            this.add(pnlOrigen);
+            this.add(pnlDestino);
+            this.add(pnlPeso);
+            this.add(pnlBoton);
+            
         }
         
         this.manageEvents();
@@ -94,21 +108,30 @@ public class JAristaDialog extends JDialog
         this.pack();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        
+    }
+
+    public void activate()
+    {
         this.setVisible(true);
+    }
+
+
+    public static Arista showInputDialog(Frame parent, Vector<String> nodos, int operation,String operationName, String message,String magnitud)
+    {
+        JAristaDialog jad = new JAristaDialog(parent, nodos, operation, operationName, message, magnitud);
+        jad.activate();
+        return jad.getArista();
+    }
+
+    public static Arista showInputDialog(Frame parent, Vector<String> nodos, int operation,String operationName, String message)
+    {
+        return JAristaDialog.showInputDialog(parent, nodos, operation, operationName, message, "");
     }
 
     public Arista getArista()
     {
         return this.arista;
-    }
-
-    private AristaPonderada getDataAristaPonderada()
-    {
-        Arista arista       = this.getDataArista();
-        String strPeso      = txtPeso.getText();
-        double peso         = Double.parseDouble(strPeso);
-
-        return new AristaPonderada(arista,peso);
     }
 
     private Arista getDataArista()
@@ -122,22 +145,19 @@ public class JAristaDialog extends JDialog
         return new Arista(origen,destino);
     }
 
-    public static Arista showInputDialog(Frame parent, Vector nodos, int operation,String operationName, String message,String magnitud)
+    private AristaPonderada getDataAristaPonderada()
     {
-        JAristaDialog jad = new JAristaDialog(parent, nodos, operation, operationName, message, magnitud);
-        return jad.getArista();
+        Arista arista       = this.getDataArista();
+        String strPeso      = txtPeso.getText();
+        double peso         = Double.parseDouble(strPeso);
 
+        return new AristaPonderada(arista,peso);
     }
 
-    public static Arista showInputDialog(Frame parent, Vector nodos, int operation,String operationName, String message)
-    {
-        return this.showInputDialog(parent, nodos, operation, operationName, message, "");
-    }
-
-    public boolean isReducedDialog()
+    private boolean isReducedDialog()
     {
         // En estos casos el dialogo no debe mostrar el textField de peso
-        return (this.operation == JVentana.SEARCH_DATA || this.operation == JVentana.DELETE_DATA);
+        return (this.operation == JVentana.SEARCH_DATA || this.operation == JVentana.REMOVE_DATA);
     }
 
     private void manageEvents()
@@ -149,11 +169,11 @@ public class JAristaDialog extends JDialog
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if(this.isReducedDialog())
+                    if(JAristaDialog.this.isReducedDialog())
                     {
-                        this.arista = getDataArista();
+                        JAristaDialog.this.arista = JAristaDialog.this.getDataArista();
                     }else{
-                        this.arista = getDataAristaPonderada();
+                        JAristaDialog.this.arista = JAristaDialog.this.getDataAristaPonderada();
                     }
                     setVisible(false);
                     dispose();
@@ -187,7 +207,7 @@ public class JAristaDialog extends JDialog
                     int keyCode = e.getKeyCode();
                     if(keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_TAB)
                     {
-                        if(this.isReducedDialog())
+                        if(JAristaDialog.this.isReducedDialog())
                         {
                             btnOperacion.requestFocus();
                         }else{

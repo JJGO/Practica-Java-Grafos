@@ -31,7 +31,7 @@ public class Camino extends ArrayList<Nodo>
     {
         this();
         this.add(origen);
-        this.add(destino)
+        this.add(destino);
     }
 
     public Nodo getInicio()

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Vector;
 
 
 public class Digrafo implements java.io.Serializable
@@ -79,18 +80,45 @@ public class Digrafo implements java.io.Serializable
         return aristas.get(origen).remove(arista);
     }
 
-    public boolean containsArista()
+
+    public boolean containsNodo(Nodo nodo)
+    {
+        return this.nodos.contains(nodo);
+    }
 
 
+    public boolean containsArista(Arista arista)
+    {
+        Nodo origen = arista.getOrigen();
+        if(this.containsNodo(origen))
+        {
+            return this.aristas.get(origen).contains(arista);
+        }else{
+            return false;
+        }
+    }
 
-    public Iterator<Nodo> nodeIterator()
+    public Iterator<Nodo> iteratorNodos()
     {
         return this.nodos.iterator();
     }
 
+    public Iterator<Arista> iteratorAristas(Nodo origen)
+    {
+        if(this.containsNodo(origen))
+        {
+            return this.aristas.get(origen).iterator();
+        }
+        else
+        {
+            throw new IllegalArgumentException("Nodo no contenido en el grafo");
+        }
+    }
+
+
     public Collection<Nodo> childrenOf(Nodo nodo)
     {
-        if(!nodos.contains(nodo))
+        if(!this.containsNodo(nodo))
             throw new IllegalArgumentException("Nodo no contenido en el grafo");
 
         ArrayList<Nodo> hijos = new ArrayList<Nodo>();
@@ -103,18 +131,18 @@ public class Digrafo implements java.io.Serializable
 
     public Vector<String> getNombreNodos()
     {
-        Vector<String> nombreNodos = new Vector();
-        Iterator<Nodos> itNodos = nodos.iterator();
+        Vector<String> nombreNodos = new Vector<String>();
+        Iterator<Nodo> itNodos = nodos.iterator();
         while(itNodos.hasNext())
         {
-            Vector.add(itNodos.next().getNombre());
+            nombreNodos.add(itNodos.next().getNombre());
         }
         return nombreNodos;
     }
 
     public Camino getShortestPath(Nodo origen, Nodo destino)
     {
-        if(!this.contains(origen) || !this.contains(destino))
+        if(!this.containsNodo(origen) || !this.containsNodo(destino))
             throw new IllegalArgumentException("Nodo no contenido en el grafo");
 
         ArrayList<Camino> caminos = new ArrayList<Camino>();
@@ -147,7 +175,7 @@ public class Digrafo implements java.io.Serializable
 
     public Collection<Camino> getPaths(Nodo origen, Nodo destino)
     {
-        if(!this.contains(origen) || !this.contains(destino))
+        if(!this.containsNodo(origen) || !this.containsNodo(destino))
             throw new IllegalArgumentException("Nodo no contenido en el grafo");
 
         ArrayList<Camino> caminos = new ArrayList<Camino>();
@@ -183,14 +211,9 @@ public class Digrafo implements java.io.Serializable
             return caminosValidos;
     }
 
-    private int longitud(Camino camino)
+    public double longitud(Camino camino)
     {
-        return camino.size();
-    }
-
-    public boolean contains(Nodo nodo)
-    {
-        return this.nodos.contains(nodo);
+        return (double)camino.size();
     }
 
     @Override 

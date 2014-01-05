@@ -34,16 +34,16 @@ public class GrafoPonderado extends Grafo
         this.unidades = unidades;
     }
 
-    public void addArista(AristaPonderada arista)
+    public boolean addArista(AristaPonderada arista)
     {
-        super.addArista(arista);
+        return super.addArista(arista);
     }
 
-    public void addArista(Arista arista)
+    public boolean addArista(Arista arista)
     {
         if(arista instanceof AristaPonderada){
             AristaPonderada a = (AristaPonderada)arista;
-            this.addArista(a);
+            return this.addArista(a);
         }
         else
             throw new IllegalArgumentException("Arista no ponderada");
@@ -51,7 +51,7 @@ public class GrafoPonderado extends Grafo
 
     public Camino getShortestPath(Nodo origen, Nodo destino)
     {
-        if(!this.contains(origen) || !this.contains(destino))
+        if(!this.containsNodo(origen) || !this.containsNodo(destino))
             throw new IllegalArgumentException("Nodo no contenido en el grafo");
 
         ArrayList<Camino> caminos = new ArrayList<Camino>();
