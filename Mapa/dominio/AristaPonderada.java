@@ -65,22 +65,22 @@ public class AristaPonderada extends Arista
         return s.toString();
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if( o instanceof Arista)
-        {
-            Arista a = (Arista) o;
-            boolean eq = super.equals(a);
-            if( a instanceof AristaPonderada)
-            {
-                double p1 = this.peso;
-                double p2 = ((AristaPonderada)a).getPeso();
-                return p1 == p2 && eq;
-            }
-            else 
-                return eq;
-        }else
-            return false;
-    }
+    // @Override
+    // public boolean equals(Object o)
+    // {
+    //     if( o instanceof Arista)
+    //     {
+    //         Arista a = (Arista) o;
+    //         boolean eq = super.equals(a);
+    //         if( a instanceof AristaPonderada)
+    //         {
+    //             double p1 = this.peso;
+    //             double p2 = ((AristaPonderada)a).getPeso();
+    //             return p1 == p2 && eq;
+    //         }
+    //         else 
+    //             return eq;
+    //     }else
+    //         return false;
+    // }
 }

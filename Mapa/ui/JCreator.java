@@ -32,8 +32,8 @@ public class JCreator{
     public static JTextField createTextField()
     {
         JTextField txt = new JTextField();
-        txt.setBackground( new Color(46,82,180));
-        txt.setForeground(Color.WHITE);
+        //txt.setBackground( new Color(46,82,180));
+        //txt.setForeground(Color.WHITE);
         txt.setHorizontalAlignment(SwingConstants.CENTER);
         txt.setPreferredSize(new Dimension(100,20));
         txt.setMaximumSize(new Dimension(100,20));
