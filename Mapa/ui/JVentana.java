@@ -4,11 +4,11 @@
 
 //JVentana.java
 
-// Ventana padre para la gestion de Grafos de distinto tipo.
+// Ventana padre para la Archivo de Grafos de distinto tipo.
 // Posee tres secciones. 
-//      -Datos:         Para la inclusion, modificacion y borrado de Nodos y Aristas
-//      -Presentacion:  Para el mostrado de informacion y busqueda de caminos minimos
-//      -Gestion:       Permite la creacion, carga y salvado de grafos tanto en archivos binarios como en tipo texto.
+//      -Editar:         Para la inclusion, modificacion y borrado de Nodos y Aristas
+//      -Ver:  Para el mostrado de informacion y busqueda de caminos minimos
+//      -Archivo:       Permite la creacion, carga y salvado de grafos tanto en archivos binarios como en tipo texto.
 
 package Mapa.ui;
 
@@ -33,22 +33,22 @@ public class JVentana extends JFrame
     public final static int UPDATE_DATA  = 2;
     public final static int SEARCH_DATA  = 3;
 
-    public final static String[] tipoOperacion = {"AÃ±adir","Eliminar","Actualizar","Buscar"};
+    public final static String[] tipoOperacion = {"Añadir","Eliminar","Actualizar","Buscar"};
 
 
     // Paneles
 
-    private JPanel pnlDatos;
-    private JPanel pnlPresentacion;
-    private JPanel pnlGestion;
+    private JPanel pnlEditar;
+    private JPanel pnlVer;
+    private JPanel pnlArchivo;
 
     // Label
 
     private JLabel lblTitulo;
 
-    private JLabel lblDatos;
-    private JLabel lblPresentacion;
-    private JLabel lblGestion;
+    private JLabel lblEditar;
+    private JLabel lblVer;
+    private JLabel lblArchivo;
 
     // Botones
 
@@ -100,10 +100,10 @@ public class JVentana extends JFrame
         lblTitulo.setMaximumSize(new Dimension(60,30));
         lblTitulo.setMinimumSize(new Dimension(60,30));
 
-        lblDatos            =   JCreator.createLabel("Datos");
-        lblPresentacion     =   JCreator.createLabel("Presentacion");
-        lblGestion          =   JCreator.createLabel("Gestion");
-        btnAdd              =   JCreator.createBtn("AÃ±adir");
+        lblEditar            =   JCreator.createLabel("Editar");
+        lblVer     =   JCreator.createLabel("Ver");
+        lblArchivo          =   JCreator.createLabel("Archivo");
+        btnAdd              =   JCreator.createBtn("Añadir");
         btnUpdate           =   JCreator.createBtn("Actualizar");
         btnRemove           =   JCreator.createBtn("Eliminar");
         btnBuscar           =   JCreator.createBtn("Buscar");
@@ -115,48 +115,48 @@ public class JVentana extends JFrame
 
         tblGrafo            = new JTable(new DefaultTableModel());
 
-        // Panel Datos - Oeste
+        // Panel Editar - Oeste
 
-        pnlDatos = new JPanel(new GridLayout(4,1));
-        pnlDatos.add(lblDatos);
-        pnlDatos.add(btnAdd);
-        pnlDatos.add(btnUpdate);
-        pnlDatos.add(btnRemove);
+        pnlEditar = new JPanel(new GridLayout(4,1));
+        pnlEditar.add(lblEditar);
+        pnlEditar.add(btnAdd);
+        pnlEditar.add(btnUpdate);
+        pnlEditar.add(btnRemove);
 
-        // Panel Presentacion - Centro
+        // Panel Ver - Centro
 
-        pnlPresentacion = new JPanel(new GridLayout(4,1));
-        pnlPresentacion.add(lblPresentacion);
-        pnlPresentacion.add(btnBuscar);
-        pnlPresentacion.add(btnDistancia);
-        pnlPresentacion.add(btnListar);
+        pnlVer = new JPanel(new GridLayout(4,1));
+        pnlVer.add(lblVer);
+        pnlVer.add(btnBuscar);
+        pnlVer.add(btnDistancia);
+        pnlVer.add(btnListar);
 
-        // Panel Gestion - Este
+        // Panel Archivo - Este
 
-        pnlGestion = new JPanel(new GridLayout(4,1));
-        pnlGestion.add(lblGestion);
-        pnlGestion.add(btnCreate);
-        pnlGestion.add(btnLoad);
-        pnlGestion.add(btnSave);
+        pnlArchivo = new JPanel(new GridLayout(4,1));
+        pnlArchivo.add(lblArchivo);
+        pnlArchivo.add(btnCreate);
+        pnlArchivo.add(btnLoad);
+        pnlArchivo.add(btnSave);
 
 
-        // gestion de eventos
+        // Archivo de eventos
         
 
         // Ajustes finales
         this.setLayout(new BorderLayout());
 
         this.add(lblTitulo,BorderLayout.NORTH);
-        this.add(pnlDatos,BorderLayout.WEST);
-        this.add(pnlPresentacion,BorderLayout.CENTER);
-        this.add(pnlGestion,BorderLayout.EAST);
+        this.add(pnlEditar,BorderLayout.WEST);
+        this.add(pnlVer,BorderLayout.CENTER);
+        this.add(pnlArchivo,BorderLayout.EAST);
         this.add(tblGrafo,BorderLayout.SOUTH);
     }
 
     private void manageEvents()
     {
         //Eventos
-        // Botones de Datos
+        // Botones de Editar
         btnAdd.addActionListener( new ActionListener()
             {
                 @Override
@@ -182,7 +182,7 @@ public class JVentana extends JFrame
                 }
             });
 
-        // Botones de Presentacion
+        // Botones de Ver
 
         btnBuscar.addActionListener( new ActionListener()
             {
@@ -209,7 +209,7 @@ public class JVentana extends JFrame
                 }
             });
 
-        // Botones de Gestion
+        // Botones de Archivo
 
         btnCreate.addActionListener( new ActionListener()
             {
@@ -245,7 +245,7 @@ public class JVentana extends JFrame
                 {
                     String nameFile = "alumnos";
                     int option = JOptionPane.showConfirmDialog( JVentana.this,
-                                                                "Â¿Desea cargar un grafo desde archivo?",
+                                                                "¿Desea cargar un grafo desde archivo?",
                                                                 "Archivo",
                                                                 JOptionPane.YES_NO_OPTION,
                                                                 JOptionPane.QUESTION_MESSAGE); 
@@ -259,8 +259,8 @@ public class JVentana extends JFrame
                 {
                     
                     int exit = JOptionPane.showConfirmDialog(   JVentana.this,  
-                                                                "Â¿Desea salir del programa?", 
-                                                                "AtenciÃ³n",
+                                                                "¿Desea salir del programa?", 
+                                                                "Atención",
                                                                 JOptionPane.YES_NO_OPTION,
                                                                 JOptionPane.WARNING_MESSAGE);
                     if(exit == JOptionPane.YES_OPTION)
@@ -268,7 +268,7 @@ public class JVentana extends JFrame
                         if(!saved)
                         {
                             int option = JOptionPane.showConfirmDialog( JVentana.this,
-                                                                        "Hay cambios sin guardar Â¿Desea guardarlos?",
+                                                                        "Hay cambios sin guardar ¿Desea guardarlos?",
                                                                         "Archivo",
                                                                         JOptionPane.YES_NO_OPTION,
                                                                         JOptionPane.QUESTION_MESSAGE); 
@@ -291,7 +291,7 @@ public class JVentana extends JFrame
         if(grafo == null) // Si no se ha definido el grafo
         {
             JOptionPane.showMessageDialog(  this, 
-                                            "Grafo no definido, por favor cree o cargue un grafo antes de operar sobre Ã©l",
+                                            "Grafo no definido, por favor cree o cargue un grafo antes de operar sobre él",
                                             "Error",
                                             JOptionPane.ERROR_MESSAGE);
         }else{
@@ -302,7 +302,7 @@ public class JVentana extends JFrame
                 opcionTipoDato = 1; // Solo las aristas son actualizables
             }else{
                 opcionTipoDato = JOptionPane.showOptionDialog(  this, 
-                                                                "Â¿Que tipo de dato desea introducir?", 
+                                                                "¿Que tipo de dato desea introducir?", 
                                                                 "Tipo de Dato", 
                                                                 JOptionPane.YES_NO_OPTION,
                                                                 JOptionPane.QUESTION_MESSAGE, 
@@ -320,7 +320,7 @@ public class JVentana extends JFrame
                         switch(operation)
                         {
                             case ADD_DATA:
-                                if(!grafo.addNodo(nodo)) // Si ya ha sido aÃ±adida
+                                if(!grafo.addNodo(nodo)) // Si ya ha sido añadida
                                 {
                                     JOptionPane.showMessageDialog(  this, 
                                                                     "Nodo ya existente en el grafo",
@@ -357,7 +357,7 @@ public class JVentana extends JFrame
                                                                     grafo.getNombreNodos(),
                                                                     operation,
                                                                     tipoOperacion[operation],
-                                                                    "Por favor introduzca los datos de la arista a "+tipoOperacion[operation],
+                                                                    "Por favor introduzca los Editar de la arista a "+tipoOperacion[operation],
                                                                     grafo.getUnidades());
                     
                     if(arista != null)
@@ -430,7 +430,7 @@ public class JVentana extends JFrame
                                                         grafo.getNombreNodos(),
                                                         SEARCH_DATA,
                                                         tipoOperacion[SEARCH_DATA],
-                                                        "Por favor introduzca los datos de la arista a buscar");
+                                                        "Por favor introduzca los Editar de la arista a buscar");
         if(arista != null)
         {
             if(grafo.containsArista(arista))
@@ -470,7 +470,7 @@ public class JVentana extends JFrame
                                                         grafo.getNombreNodos(),
                                                         SEARCH_DATA,
                                                         tipoOperacion[SEARCH_DATA],
-                                                        "Por favor introduzca los datos de los nodos entre los que desea hallar la distancia");
+                                                        "Por favor introduzca los Editar de los nodos entre los que desea hallar la distancia");
         try{
             Nodo origen = arista.getOrigen();
             Nodo destino = arista.getDestino();
@@ -545,7 +545,7 @@ public class JVentana extends JFrame
         if(grafo != null)
         {
             int option = JOptionPane.showConfirmDialog( JVentana.this,
-                                                        "Â¿Desea guardar los cambios realizados en el grafo actual?",
+                                                        "¿Desea guardar los cambios realizados en el grafo actual?",
                                                         "Archivo",
                                                         JOptionPane.YES_NO_OPTION,
                                                         JOptionPane.QUESTION_MESSAGE); 
@@ -569,6 +569,7 @@ public class JVentana extends JFrame
                 this.grafo = new GrafoPonderado(nombre,unidades);   
                 lblTitulo.setText(grafo.getNombre());
                 saved = false;
+                this.updateTable();
             } 
         }
         
@@ -597,7 +598,7 @@ public class JVentana extends JFrame
         // String nameFile = JOptionPane.showInputDialog(this,"Por favor especifique el nombre del archivo","Nombre del Archivo",JOptionPane.QUESTION_MESSAGE);
         String[] tiposArchivo = {"Archivo Binario","Archivo de Texto"};
         int opcion = JOptionPane.showOptionDialog(  this, 
-                                                    "Â¿Que tipo de fichero desea utilizar?", 
+                                                    "¿Que tipo de fichero desea utilizar?", 
                                                     "Tipo de Fichero", 
                                                     JOptionPane.YES_NO_OPTION,
                                                     JOptionPane.QUESTION_MESSAGE, 
