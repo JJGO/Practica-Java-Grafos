@@ -51,7 +51,7 @@ public class Arista implements java.io.Serializable
     {
         StringBuilder s = new StringBuilder();
         s.append(origen.toString());
-        s.append(" -> ");
+        s.append(" \u2192 ");
         s.append(destino.toString());
         return s.toString();
     }

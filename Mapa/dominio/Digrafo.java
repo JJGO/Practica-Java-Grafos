@@ -88,6 +88,23 @@ public class Digrafo implements java.io.Serializable
         
     }
 
+    public Arista getArista(Nodo origen, Nodo destino)
+    {   
+        Arista arista = new Arista(origen,destino);
+        if(this.containsArista(arista))
+        {
+            Iterator<Arista> itAristas = this.iteratorAristas(origen);
+            Arista i = null;
+            while(!arista.equals(i))
+            {
+                i = itAristas.next();
+            }
+            return i;  
+        }else{
+            throw new IllegalArgumentException("Arista no contenida en el grafo");
+        }
+    }
+
 
     public boolean containsNodo(Nodo nodo)
     {
@@ -229,14 +246,27 @@ public class Digrafo implements java.io.Serializable
     {
         StringBuilder s = new StringBuilder();
         s.append(this.nombre);
+        s.append("\n\n");
+        s.append("== Nodos ==");
         s.append("\n");
         Iterator<Nodo> itNodos = nodos.iterator();
+        while(itNodos.hasNext())
+        {
+            s.append(itNodos.next().toString());
+            s.append("\n");
+        }
+        s.append("\n");
+        s.append("== Aristas ==");
+        s.append("\n");
+        
+        itNodos = nodos.iterator();
         while(itNodos.hasNext())
         {
             Nodo padre = itNodos.next();
             Iterator<Arista> itHijos = aristas.get(padre).iterator();
             while(itHijos.hasNext())
             {
+
                 s.append(itHijos.next().toString());
                 s.append("\n");
             }

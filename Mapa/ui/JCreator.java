@@ -8,11 +8,19 @@
 
 package Mapa.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
 import java.util.Vector;
+
+import java.awt.Font;
+import java.awt.Dimension;
+import java.awt.Cursor;
+
+
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+
 
 public class JCreator{
 
@@ -20,7 +28,6 @@ public class JCreator{
     {
         JLabel lbl = new JLabel(name);
         lbl.setFont(new Font("Arial",Font.BOLD,12));
-        //lbl.setHorizontalAlignment(SwingConstants.LEFT);
         lbl.setHorizontalAlignment(SwingConstants.CENTER);
         lbl.setPreferredSize(new Dimension(60,20));
         lbl.setMaximumSize(new Dimension(60,20));
@@ -32,8 +39,6 @@ public class JCreator{
     public static JTextField createTextField()
     {
         JTextField txt = new JTextField();
-        //txt.setBackground( new Color(46,82,180));
-        //txt.setForeground(Color.WHITE);
         txt.setHorizontalAlignment(SwingConstants.CENTER);
         txt.setPreferredSize(new Dimension(100,20));
         txt.setMaximumSize(new Dimension(100,20));

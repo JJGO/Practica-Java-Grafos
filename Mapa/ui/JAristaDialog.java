@@ -16,11 +16,25 @@ import Mapa.dominio.Nodo;
 import Mapa.dominio.Arista;
 import Mapa.dominio.AristaPonderada;
 
-import java.util.*;
+import java.util.Vector;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Frame;
+import java.awt.Dialog;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 
 
@@ -28,26 +42,26 @@ import javax.swing.*;
 
 public class JAristaDialog extends JDialog
 {
-    private JLabel lblMensaje;
+    private JLabel      lblMensaje;
     
-    private JLabel lblOrigen;
-    private JLabel lblDestino;
-    private JLabel lblPeso;
+    private JLabel      lblOrigen;
+    private JLabel      lblDestino;
+    private JLabel      lblPeso;
     
     private JComboBox   cbxOrigen;
     private JComboBox   cbxDestino;
     private JTextField  txtPeso;
     
-    private JPanel pnlOrigen;
-    private JPanel pnlDestino;
-    private JPanel pnlPeso;
-    private JPanel pnlBoton;
+    private JPanel      pnlOrigen;
+    private JPanel      pnlDestino;
+    private JPanel      pnlPeso;
+    private JPanel      pnlBoton;
     
     private JButton     btnOperacion;
 
-    private Arista arista;
+    private Arista      arista;
 
-    private int operation;
+    private int         operation;
 
 
 
@@ -55,27 +69,27 @@ public class JAristaDialog extends JDialog
     {
         super(parent,operationName + " Arista",Dialog.DEFAULT_MODALITY_TYPE);
 
-        this.operation = operation;
+        this.operation  = operation;
 
-        lblMensaje = JCreator.createLabel(message);
+        lblMensaje      = JCreator.createLabel(message);
 
-        lblOrigen = JCreator.createLabel("Origen");
-        lblDestino = JCreator.createLabel("Destino");
+        lblOrigen       = JCreator.createLabel("Origen");
+        lblDestino      = JCreator.createLabel("Destino");
 
-        cbxOrigen =  JCreator.createComboBox(nodos);
-        cbxDestino =  JCreator.createComboBox(nodos);
+        cbxOrigen       =  JCreator.createComboBox(nodos);
+        cbxDestino      =  JCreator.createComboBox(nodos);
 
-        btnOperacion = JCreator.createBtn(operationName);
+        btnOperacion    = JCreator.createBtn(operationName);
         
-        pnlOrigen = new JPanel(new FlowLayout());
+        pnlOrigen       = new JPanel(new FlowLayout());
         pnlOrigen.add(lblOrigen);
         pnlOrigen.add(cbxOrigen);
 
-        pnlDestino = new JPanel(new FlowLayout());
+        pnlDestino      = new JPanel(new FlowLayout());
         pnlDestino.add(lblDestino);
         pnlDestino.add(cbxDestino);
 
-        pnlBoton = new JPanel(new FlowLayout());
+        pnlBoton        = new JPanel(new FlowLayout());
         pnlBoton.add(btnOperacion);
 
         
@@ -149,7 +163,8 @@ public class JAristaDialog extends JDialog
     {
         Arista arista       = this.getDataArista();
         String strPeso      = txtPeso.getText();
-        double peso         = Double.parseDouble(strPeso);
+        double peso         = Double.parseDouble(strPeso);    
+        
 
         return new AristaPonderada(arista,peso);
     }
@@ -169,14 +184,23 @@ public class JAristaDialog extends JDialog
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    if(JAristaDialog.this.isReducedDialog())
+                    try{
+                        if(JAristaDialog.this.isReducedDialog())
+                        {
+                            JAristaDialog.this.arista = JAristaDialog.this.getDataArista();
+                        }else{
+                            JAristaDialog.this.arista = JAristaDialog.this.getDataAristaPonderada();
+                        }
+                        setVisible(false);
+                        dispose();
+                    }catch(Exception exception)
                     {
-                        JAristaDialog.this.arista = JAristaDialog.this.getDataArista();
-                    }else{
-                        JAristaDialog.this.arista = JAristaDialog.this.getDataAristaPonderada();
+                        JOptionPane.showMessageDialog(  null, 
+                                                        "Datos invalidos",
+                                                        "Error",
+                                                        JOptionPane.ERROR_MESSAGE);
                     }
-                    setVisible(false);
-                    dispose();
+                    
                 }
             });
 

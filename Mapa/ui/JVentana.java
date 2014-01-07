@@ -12,17 +12,40 @@
 
 package Mapa.ui;
 
-import Mapa.dominio.*;
+import Mapa.dominio.Nodo;
+import Mapa.dominio.Arista;
+import Mapa.dominio.GrafoPonderado;
+import Mapa.dominio.Camino;
+
 import Mapa.io.IOGrafo;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.util.Vector;
+import java.util.Iterator;
 
-import java.util.*;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+
+import javax.swing.table.DefaultTableModel;
 
 public class JVentana extends JFrame
 {
@@ -36,40 +59,51 @@ public class JVentana extends JFrame
     public final static String[] tipoOperacion = {"Añadir","Eliminar","Actualizar","Buscar"};
 
 
-    // Paneles
+    // Menu
+    private JPanel              pnlCentral;
+    private JPanel              pnlSur;
 
-    private JPanel pnlEditar;
-    private JPanel pnlVer;
-    private JPanel pnlArchivo;
+    private JMenuBar            mbBarra;
 
-    // Label
+    private JMenu               menuArchivo;
+    private JMenu               menuEditar;
+    private JMenu               menuVer;
 
-    private JLabel lblTitulo;
 
-    private JLabel lblEditar;
-    private JLabel lblVer;
-    private JLabel lblArchivo;
+    // Botones de Menu
 
-    // Botones
+    private JMenuItem           mitNuevoGrafo;
+    private JMenuItem           mitAbrirGrafo;
+    private JMenuItem           mitGuardar;
+    private JMenuItem           mitGuardarComo;
+    // 
 
-    private JButton btnAdd;
-    private JButton btnUpdate;
-    private JButton btnRemove;
+    private JMenuItem           mitNuevoNodo;
+    private JMenuItem           mitBorrarNodo;
 
-    private JButton btnBuscar;
-    private JButton btnDistancia;
-    private JButton btnListar;
-    // TODO private JButton btnTabla;
+    private JMenuItem           mitNuevoArista;
+    private JMenuItem           mitEditarArista;
+    private JMenuItem           mitBorrarArista;
 
-    private JButton btnCreate;
-    private JButton btnSave;
-    private JButton btnLoad;
+    private JMenuItem           mitBuscarArista;
+    private JMenuItem           mitCalcularDistancia;
+    private JMenuItem           mitListarGrafo;
+    private JCheckBoxMenuItem   mitToggleDistancia;
 
-    private JTable tblGrafo;
-    // private DefaultTableModel tabla;
+    
+        // Label    
+    
+    private JLabel              lblTitulo;
+    
+    private JTable              tblGrafo;
+    private DefaultTableModel   tableModel;
 
-    private GrafoPonderado grafo = null;
-    private boolean saved;
+    // variables que no forman parte de la nterfaz grafica
+
+    private GrafoPonderado      grafo;
+    private boolean             saved;
+    private boolean             allDistances;
+    private String              nameFile;
 
 
 
@@ -80,7 +114,12 @@ public class JVentana extends JFrame
     public JVentana()
     {
         super("Grafos");
-        
+
+        this.grafo = null;
+        this.nameFile = null;
+        this.allDistances = false;
+        this.saved = true;
+
         this.initComponents();
         this.manageEvents();
 
@@ -96,103 +135,172 @@ public class JVentana extends JFrame
     {
         lblTitulo       =   JCreator.createLabel("Grafos");
         lblTitulo.setFont(new Font("Arial",Font.BOLD,24));
-        lblTitulo.setPreferredSize(new Dimension(60,30));
-        lblTitulo.setMaximumSize(new Dimension(60,30));
-        lblTitulo.setMinimumSize(new Dimension(60,30));
+        lblTitulo.setPreferredSize(new Dimension(150,40));
+        lblTitulo.setMaximumSize(new Dimension(150,40));
+        lblTitulo.setMinimumSize(new Dimension(150,40));
 
-        lblEditar            =   JCreator.createLabel("Editar");
-        lblVer     =   JCreator.createLabel("Ver");
-        lblArchivo          =   JCreator.createLabel("Archivo");
-        btnAdd              =   JCreator.createBtn("Añadir");
-        btnUpdate           =   JCreator.createBtn("Actualizar");
-        btnRemove           =   JCreator.createBtn("Eliminar");
-        btnBuscar           =   JCreator.createBtn("Buscar");
-        btnDistancia        =   JCreator.createBtn("Distancia");
-        btnListar           =   JCreator.createBtn("Listar");
-        btnCreate           =   JCreator.createBtn("Crear");
-        btnSave             =   JCreator.createBtn("Guardar");
-        btnLoad             =   JCreator.createBtn("Cargar");
+        tableModel              = new DefaultTableModel();
+        tblGrafo                = new JTable(tableModel);
 
-        tblGrafo            = new JTable(new DefaultTableModel());
+        // Menus
 
-        // Panel Editar - Oeste
+        mbBarra                 = new JMenuBar();
 
-        pnlEditar = new JPanel(new GridLayout(4,1));
-        pnlEditar.add(lblEditar);
-        pnlEditar.add(btnAdd);
-        pnlEditar.add(btnUpdate);
-        pnlEditar.add(btnRemove);
+        menuArchivo             = new JMenu("Archivo");
+        menuEditar              = new JMenu("Editar");
+        menuVer                 = new JMenu("Ver");
 
-        // Panel Ver - Centro
+        mitNuevoGrafo           = new JMenuItem("Nuevo Grafo");
+        mitAbrirGrafo           = new JMenuItem("Abrir Grafo");
+        mitGuardar              = new JMenuItem("Guardar");
+        mitGuardarComo          = new JMenuItem("Guardar Como");
 
-        pnlVer = new JPanel(new GridLayout(4,1));
-        pnlVer.add(lblVer);
-        pnlVer.add(btnBuscar);
-        pnlVer.add(btnDistancia);
-        pnlVer.add(btnListar);
+        mitNuevoNodo            = new JMenuItem("Nuevo Nodo");
+        mitBorrarNodo           = new JMenuItem("Borrar Nodo");
+        mitNuevoArista          = new JMenuItem("Nuevo Arista");
+        mitEditarArista         = new JMenuItem("Editar Arista");
+        mitBorrarArista         = new JMenuItem("Borrar Arista");
 
-        // Panel Archivo - Este
+        mitBuscarArista         = new JMenuItem("Buscar Arista");
+        mitCalcularDistancia    = new JMenuItem("Calcular Distancia");
+        mitListarGrafo          = new JMenuItem("Listar Grafo");
+        mitToggleDistancia      = new JCheckBoxMenuItem("Mostar Distancia");
 
-        pnlArchivo = new JPanel(new GridLayout(4,1));
-        pnlArchivo.add(lblArchivo);
-        pnlArchivo.add(btnCreate);
-        pnlArchivo.add(btnLoad);
-        pnlArchivo.add(btnSave);
+        // Menu Desplegabe Archivo
+        menuArchivo.add(mitNuevoGrafo);
+        menuArchivo.add(mitAbrirGrafo);
+        menuArchivo.add(mitGuardar);
+        menuArchivo.add(mitGuardarComo);
+        mbBarra.add(menuArchivo);
 
+        // Menu Desplegable Editar
+        menuEditar.add(mitNuevoNodo);
+        menuEditar.add(mitBorrarNodo);
+        menuEditar.addSeparator();
+        menuEditar.add(mitNuevoArista);
+        menuEditar.add(mitEditarArista);
+        menuEditar.add(mitBorrarArista);
+        mbBarra.add(menuEditar);
 
-        // Archivo de eventos
-        
+        // Menu Desplegable Ver
+        menuVer.add(mitBuscarArista);
+        menuVer.add(mitCalcularDistancia);
+        menuVer.add(mitListarGrafo);
+        menuVer.add(mitToggleDistancia);
+        mbBarra.add(menuVer);
+
+        // Panel Norte - Menu
+
+        //pnlNorte = new JPanel(new FlowLayout());
+        //pnlNorte.add(mbBarra);
+
+        pnlCentral = new JPanel(new FlowLayout());
+        pnlCentral.add(lblTitulo);
+
+        pnlSur = new JPanel(new FlowLayout());
+        pnlSur.add(tblGrafo);
 
         // Ajustes finales
         this.setLayout(new BorderLayout());
 
-        this.add(lblTitulo,BorderLayout.NORTH);
-        this.add(pnlEditar,BorderLayout.WEST);
-        this.add(pnlVer,BorderLayout.CENTER);
-        this.add(pnlArchivo,BorderLayout.EAST);
-        this.add(tblGrafo,BorderLayout.SOUTH);
+        this.add(mbBarra,BorderLayout.NORTH);
+        this.add(pnlCentral,BorderLayout.CENTER);
+        this.add(pnlSur,BorderLayout.SOUTH);
     }
 
     private void manageEvents()
     {
         //Eventos
+
+        // Botones de Archivo
+
+        mitNuevoGrafo.addActionListener( new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JVentana.this.createGrafo();
+                }
+            });
+        mitAbrirGrafo.addActionListener( new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JVentana.this.loadGrafo();
+                }
+            });
+        mitGuardar.addActionListener( new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JVentana.this.saveGrafo();
+                }
+            });
+        mitGuardarComo.addActionListener( new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JVentana.this.saveGrafoAs();
+                }
+            });
+
+
         // Botones de Editar
-        btnAdd.addActionListener( new ActionListener()
+        mitNuevoNodo.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    JVentana.this.operateData(JVentana.this.ADD_DATA);
+                    JVentana.this.operateNodo(JVentana.this.ADD_DATA);
                 }
             });
-        btnUpdate.addActionListener( new ActionListener()
+        mitBorrarNodo.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    JVentana.this.operateData(JVentana.this.UPDATE_DATA);
+                    JVentana.this.operateNodo(JVentana.this.REMOVE_DATA);
                 }
             });
-        btnRemove.addActionListener( new ActionListener()
+        mitNuevoArista.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    JVentana.this.operateData(JVentana.this.REMOVE_DATA);
+                    JVentana.this.operateArista(JVentana.this.ADD_DATA);
+                }
+            });
+        mitEditarArista.addActionListener( new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JVentana.this.operateArista(JVentana.this.UPDATE_DATA);
+                }
+            });
+        mitBorrarArista.addActionListener( new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JVentana.this.operateArista(JVentana.this.REMOVE_DATA);
                 }
             });
 
         // Botones de Ver
 
-        btnBuscar.addActionListener( new ActionListener()
+        mitBuscarArista.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    JVentana.this.searchData();
+                    JVentana.this.searchArista();
                 }
             });
-        btnDistancia.addActionListener( new ActionListener()
+        mitCalcularDistancia.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
@@ -200,7 +308,7 @@ public class JVentana extends JFrame
                     JVentana.this.getPath();
                 }
             });
-        btnListar.addActionListener( new ActionListener()
+        mitListarGrafo.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
@@ -209,33 +317,17 @@ public class JVentana extends JFrame
                 }
             });
 
-        // Botones de Archivo
-
-        btnCreate.addActionListener( new ActionListener()
+        mitToggleDistancia.addActionListener( new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    JVentana.this.createGrafo();
-                }
-            });
-        btnSave.addActionListener( new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    JVentana.this.saveGrafo();
-                }
-            });
-        btnLoad.addActionListener( new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    JVentana.this.loadGrafo();
+                    JVentana.this.allDistances = mitToggleDistancia.isSelected();
+                    JVentana.this.updateTable();
                 }
             });
 
+        
         
 
         this.addWindowListener(new WindowAdapter()
@@ -243,7 +335,6 @@ public class JVentana extends JFrame
                 @Override
                 public void windowOpened(WindowEvent e)
                 {
-                    String nameFile = "alumnos";
                     int option = JOptionPane.showConfirmDialog( JVentana.this,
                                                                 "¿Desea cargar un grafo desde archivo?",
                                                                 "Archivo",
@@ -271,7 +362,7 @@ public class JVentana extends JFrame
                                                                         "Hay cambios sin guardar ¿Desea guardarlos?",
                                                                         "Archivo",
                                                                         JOptionPane.YES_NO_OPTION,
-                                                                        JOptionPane.QUESTION_MESSAGE); 
+                                                                        JOptionPane.WARNING_MESSAGE); 
                             if(option == JOptionPane.YES_OPTION){
                                 JVentana.this.saveGrafo();
                             }
@@ -285,9 +376,8 @@ public class JVentana extends JFrame
             });
     }
 
-    private void operateData(int operation)
+    private void operateNodo(int operation)
     {
-        
         if(grafo == null) // Si no se ha definido el grafo
         {
             JOptionPane.showMessageDialog(  this, 
@@ -295,136 +385,122 @@ public class JVentana extends JFrame
                                             "Error",
                                             JOptionPane.ERROR_MESSAGE);
         }else{
-            int opcionTipoDato;
-            String[] tiposDato = {"Nodo","Arista"};
-            if(operation == UPDATE_DATA)
+            String nombreNodo = JOptionPane.showInputDialog(this,"Por favor introduzca el nombre del nodo a "+tipoOperacion[operation]);
+            if(nombreNodo != null && !nombreNodo.equals(""))
             {
-                opcionTipoDato = 1; // Solo las aristas son actualizables
-            }else{
-                opcionTipoDato = JOptionPane.showOptionDialog(  this, 
-                                                                "¿Que tipo de dato desea introducir?", 
-                                                                "Tipo de Dato", 
-                                                                JOptionPane.YES_NO_OPTION,
-                                                                JOptionPane.QUESTION_MESSAGE, 
-                                                                null, 
-                                                                tiposDato, 
-                                                                tiposDato[0]);
-            }
-            switch(opcionTipoDato)
-            {
-                case 0:
-                    String nombreNodo = JOptionPane.showInputDialog(this,"Por favor introduzca el nombre del nodo a "+tipoOperacion[operation]);
-                    if(nombreNodo != null)
-                    {
-                        Nodo nodo = new Nodo(nombreNodo);
-                        switch(operation)
+                Nodo nodo = new Nodo(nombreNodo);
+                switch(operation)
+                {
+                    case ADD_DATA:
+                        if(!grafo.addNodo(nodo)) // Si ya ha sido añadida
                         {
-                            case ADD_DATA:
-                                if(!grafo.addNodo(nodo)) // Si ya ha sido añadida
-                                {
-                                    JOptionPane.showMessageDialog(  this, 
-                                                                    "Nodo ya existente en el grafo",
-                                                                    "Error",
-                                                                    JOptionPane.ERROR_MESSAGE);
-                                }else{
-                                    saved = false;
-                                    this.updateTable();
-                                }
-                                break;
-                            case REMOVE_DATA:
-                                if(!grafo.removeNodo(nodo)){
-                                    JOptionPane.showMessageDialog(  this, 
-                                                                    "Nodo no contenido en el grafo",
-                                                                    "Error",
-                                                                    JOptionPane.ERROR_MESSAGE);
-                                }else{
-                                    saved = false;
-                                    this.updateTable();
-                                }
-                                break;
-                            case UPDATE_DATA:
-                                // No debe alcanzarse, los nodos no son actualizables ya que son claves de un HashMap
-                                break;
-                            default:
-                                break;
+                            JOptionPane.showMessageDialog(  this, 
+                                                            "Nodo ya existente en el grafo",
+                                                            "Error",
+                                                            JOptionPane.ERROR_MESSAGE);
+                        }else{
+                            saved = false;
+                            this.updateTable();
                         }
-                    }
-                    break;
-                    
+                        break;
+                    case REMOVE_DATA:
+                        if(!grafo.removeNodo(nodo)){
+                            JOptionPane.showMessageDialog(  this, 
+                                                            "Nodo no contenido en el grafo",
+                                                            "Error",
+                                                            JOptionPane.ERROR_MESSAGE);
+                        }else{
+                            saved = false;
+                            this.updateTable();
+                        }
+                        break;
+                    case UPDATE_DATA:
+                        // No debe alcanzarse, los nodos no son actualizables ya que son claves de un HashMap
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 
-                case 1:
-                    Arista arista = JAristaDialog.showInputDialog(  this,
+    private void operateArista(int operation)
+    {
+        if(grafo == null) // Si no se ha definido el grafo
+        {
+            JOptionPane.showMessageDialog(  this, 
+                                            "Grafo no definido, por favor cree o cargue un grafo antes de operar sobre él",
+                                            "Error",
+                                            JOptionPane.ERROR_MESSAGE);
+        }else{
+            Arista arista = JAristaDialog.showInputDialog(  this,
                                                                     grafo.getNombreNodos(),
                                                                     operation,
                                                                     tipoOperacion[operation],
                                                                     "Por favor introduzca los Editar de la arista a "+tipoOperacion[operation],
                                                                     grafo.getUnidades());
                     
-                    if(arista != null)
+            if(arista != null)
+            {
+                try{
+                    switch(operation)
                     {
-                        try{
-                            switch(operation)
+                        case ADD_DATA:
+                            if(!grafo.addArista(arista))
                             {
-                                case ADD_DATA:
-                                    if(!grafo.addArista(arista))
-                                    {
-                                        JOptionPane.showMessageDialog(  this, 
-                                                                        "Arista ya existente en el grafo",
-                                                                        "Error",
-                                                                        JOptionPane.ERROR_MESSAGE);
-                                    }else{
-                                        saved = false;
-                                        this.updateTable();
-                                    }
-                                    break;
-                                case REMOVE_DATA:
-                                    if(!grafo.removeArista(arista))
-                                    {
-                                        JOptionPane.showMessageDialog(  this, 
-                                                                        "Arista no contenida en el grafo",
-                                                                        "Error",
-                                                                        JOptionPane.ERROR_MESSAGE);
-                                    }else{
-                                        saved = false;
-                                        this.updateTable();
-                                    }
-                                    break;
-                                case UPDATE_DATA:
-                                    Arista aristaNoPonderada = new Arista(arista.getOrigen(),arista.getDestino());
-                                    if(!grafo.removeArista(aristaNoPonderada))
-                                    {
-                                        JOptionPane.showMessageDialog(  this, 
-                                                                        "Arista no contenida en el grafo",
-                                                                        "Error",
-                                                                        JOptionPane.ERROR_MESSAGE);
-                                    }else{
-                                        grafo.addArista(arista);
-                                        saved = false;
-                                        this.updateTable();
-                                    }
-                                    
-                                    break;
-                                default:
-                                    break;
+                                JOptionPane.showMessageDialog(  this, 
+                                                                "Arista ya existente en el grafo",
+                                                                "Error",
+                                                                JOptionPane.ERROR_MESSAGE);
+                            }else{
+                                saved = false;
+                                this.updateTable();
                             }
-                        }catch(IllegalArgumentException e)
-                        {
-                            JOptionPane.showMessageDialog(  this, 
-                                                            e.getMessage(),
-                                                            "Error",
-                                                            JOptionPane.ERROR_MESSAGE);
-                        }
+                            break;
+                        case REMOVE_DATA:
+                            if(!grafo.removeArista(arista))
+                            {
+                                JOptionPane.showMessageDialog(  this, 
+                                                                "Arista no contenida en el grafo",
+                                                                "Error",
+                                                                JOptionPane.ERROR_MESSAGE);
+                            }else{
+                                saved = false;
+                                this.updateTable();
+                            }
+                            break;
+                        case UPDATE_DATA:
+                            Arista aristaNoPonderada = new Arista(arista.getOrigen(),arista.getDestino());
+                            if(!grafo.removeArista(aristaNoPonderada))
+                            {
+                                JOptionPane.showMessageDialog(  this, 
+                                                                "Arista no contenida en el grafo",
+                                                                "Error",
+                                                                JOptionPane.ERROR_MESSAGE);
+                            }else{
+                                grafo.addArista(arista);
+                                saved = false;
+                                this.updateTable();
+                            }
+                            
+                            break;
+                        default:
+                            break;
                     }
-                    break;
-                default: 
-                    break;
+                }catch(IllegalArgumentException e)
+                {
+                    JOptionPane.showMessageDialog(  this, 
+                                                    e.getMessage(),
+                                                    "Error",
+                                                    JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
-        
+
     }
 
 
-    private void searchData()
+    private void searchArista()
     {
         Arista arista = JAristaDialog.showInputDialog(  this,
                                                         grafo.getNombreNodos(),
@@ -433,15 +509,9 @@ public class JVentana extends JFrame
                                                         "Por favor introduzca los Editar de la arista a buscar");
         if(arista != null)
         {
-            if(grafo.containsArista(arista))
+            try
             {
-                Iterator<Arista> itAristas = grafo.iteratorAristas(arista.getOrigen());
-                Arista i = null;
-                while(!arista.equals(i))
-                {
-                    i = itAristas.next();
-                }
-                double peso = ((AristaPonderada) i).getPeso();
+                double peso = grafo.getPeso(arista.getOrigen(),arista.getDestino());
 
                 StringBuilder s = new StringBuilder();
                 s.append("La arista que conecta ");
@@ -454,7 +524,8 @@ public class JVentana extends JFrame
                 s.append(grafo.getUnidades());
 
                 JOptionPane.showMessageDialog( this, s.toString());
-            }else{
+            }catch(IllegalArgumentException e)
+            {
                 JOptionPane.showMessageDialog(  this, 
                                                 "Arista no contenida en el grafo",
                                                 "Error",
@@ -537,12 +608,25 @@ public class JVentana extends JFrame
     private void listData()
     {
         // TODO Un Text Area o algo asi que imprima el grafo de golpe 
+        
+        JTextArea textArea = new JTextArea(grafo.toString());
+        textArea.setColumns(30);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        textArea.setOpaque(false);
+        textArea.setSize(textArea.getPreferredSize().width, 1);
+        JOptionPane.showMessageDialog(  this, 
+                                        textArea, 
+                                        grafo.getNombre(), 
+                                        JOptionPane.INFORMATION_MESSAGE);
+         
     }
 
 
     private void createGrafo()
     {
-        if(grafo != null)
+        if(!saved)
         {
             int option = JOptionPane.showConfirmDialog( JVentana.this,
                                                         "¿Desea guardar los cambios realizados en el grafo actual?",
@@ -558,17 +642,18 @@ public class JVentana extends JFrame
                                                     "Por favor especifique el nombre del grafo",
                                                     "Nombre del Grafo",
                                                     JOptionPane.QUESTION_MESSAGE);
-        if(nombre != null)
+        if(nombre != null && !nombre.equals(""))
         {
             String unidades = JOptionPane.showInputDialog( this,
                                                         "Por favor especifique las unidades del grafo",
                                                         "Unidades del Grafo",
                                                         JOptionPane.QUESTION_MESSAGE);
-            if(unidades != null)
+            if(unidades != null && !unidades.equals(""))
             {
                 this.grafo = new GrafoPonderado(nombre,unidades);   
                 lblTitulo.setText(grafo.getNombre());
                 saved = false;
+                nameFile = null;
                 this.updateTable();
             } 
         }
@@ -577,12 +662,23 @@ public class JVentana extends JFrame
 
     private void loadGrafo()
     {
-        //String nameFile = JOptionPane.showInputDialog(this,"Por favor especifique el nombre del archivo","Nombre del Archivo",JOptionPane.QUESTION_MESSAGE);
+        if(!saved)
+        {
+            int option = JOptionPane.showConfirmDialog( JVentana.this,
+                                                        "¿Desea guardar los cambios realizados en el grafo actual?",
+                                                        "Archivo",
+                                                        JOptionPane.YES_NO_OPTION,
+                                                        JOptionPane.QUESTION_MESSAGE); 
+            if(option == JOptionPane.YES_OPTION){
+                JVentana.this.saveGrafo();
+            }
+        }
+        
         JFileChooser j = new JFileChooser(); 
         int rtn = j.showOpenDialog(this);
         if (rtn == JFileChooser.APPROVE_OPTION)
         {
-            String nameFile = j.getSelectedFile().getPath();
+            nameFile = j.getSelectedFile().getPath();
             grafo = (GrafoPonderado)IOGrafo.readFile(nameFile);
             if(grafo != null)
             {
@@ -593,9 +689,8 @@ public class JVentana extends JFrame
         }
     }
 
-    private void saveGrafo()
+    private void saveGrafoAs()
     {
-        // String nameFile = JOptionPane.showInputDialog(this,"Por favor especifique el nombre del archivo","Nombre del Archivo",JOptionPane.QUESTION_MESSAGE);
         String[] tiposArchivo = {"Archivo Binario","Archivo de Texto"};
         int opcion = JOptionPane.showOptionDialog(  this, 
                                                     "¿Que tipo de fichero desea utilizar?", 
@@ -610,24 +705,34 @@ public class JVentana extends JFrame
         int rtn = j.showSaveDialog(this);
         if (rtn == JFileChooser.APPROVE_OPTION)
         {
-            String nameFile = j.getSelectedFile().getPath();
+            nameFile = j.getSelectedFile().getPath();
             if(opcion == 0)
             {    
                 IOGrafo.writeFile(grafo,nameFile);
                 saved = true;
                 
             }else{
-                // IOGrafo.writeTextFile(grafo,nameFile);
-                // TODO Export2TXT
+                IOGrafo.writeTextFile(grafo,nameFile);
                 saved = true;
             }
         }
         
     }
 
+    private void saveGrafo()
+    {
+        if(nameFile == null)
+        {
+            this.saveGrafoAs();
+        }else{
+            IOGrafo.writeFile(grafo,nameFile);
+            saved = true;
+        }
+    }
+
     private void updateTable()
     {   
-        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel();
 
         Iterator<Nodo> itNodos = grafo.iteratorNodos();
         Vector<Nodo> nodos = new Vector<Nodo>();
@@ -658,18 +763,19 @@ public class JVentana extends JFrame
             for( int j = 0 ; j < i ; j++)
             {
                 Arista arista = new Arista(nodoFila,nodos.get(j));
-                Iterator<Arista> itAristas = grafo.iteratorAristas(nodoFila);
-                if(grafo.containsArista(arista))
+                try
                 {
-                    Arista aristaPonderada = null;
-                    while(!arista.equals(aristaPonderada))
+                    Double peso;
+                    if(allDistances)
                     {
-                        aristaPonderada = itAristas.next();
+                        peso = grafo.longitud(grafo.getShortestPath(arista.getOrigen(),arista.getDestino()));
+                    }else
+                    {
+                        peso = grafo.getPeso(arista.getOrigen(),arista.getDestino());    
                     }
-                    Double peso = ((AristaPonderada) aristaPonderada).getPeso();
-
+                    
                     fila.add(peso.toString());
-                }else
+                }catch(IllegalArgumentException e)
                 {
                     fila.add(" - ");
                 }

@@ -49,6 +49,12 @@ public class GrafoPonderado extends Grafo
             throw new IllegalArgumentException("Arista no ponderada");
     }
 
+    public double getPeso(Nodo origen, Nodo destino)
+    {
+        Arista aristaPonderada = this.getArista(origen,destino);
+        return ((AristaPonderada) aristaPonderada).getPeso();
+    }
+
     public Camino getShortestPath(Nodo origen, Nodo destino)
     {
         if(!this.containsNodo(origen) || !this.containsNodo(destino))
@@ -106,12 +112,7 @@ public class GrafoPonderado extends Grafo
             {
                 Nodo anterior = actual;
                 actual = itNodos.next();
-                Iterator<Arista> itAristas = super.aristas.get(anterior).iterator();
-                Arista a = new Arista(anterior,actual); 
-                Arista b = null;
-                while(!a.equals(b))
-                    b = itAristas.next();
-                length += ((AristaPonderada) b).getPeso();
+                length += this.getPeso(anterior,actual);
 
             }
         }

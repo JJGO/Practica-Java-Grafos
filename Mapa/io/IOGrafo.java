@@ -8,12 +8,28 @@
 
 package Mapa.io;
 
-import java.io.*;
+import Mapa.dominio.Nodo;
+import Mapa.dominio.Arista;
 import Mapa.dominio.Digrafo;
+import Mapa.dominio.GrafoPonderado;
+
+import apiexterna.practicaFinal.io.Export2TXT;
+
+import java.util.Iterator;
+
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
+import java.io.IOException;
+import java.io.EOFException;
+import java.io.FileNotFoundException;
+
 
 public class IOGrafo
 {
-    private static  String EXTENSION = ".bin";
+    public final static  String EXTENSION = ".bin";
 
     public static Digrafo readFile(String nameFile)
     {
@@ -47,7 +63,10 @@ public class IOGrafo
         catch(FileNotFoundException e)
         {
             e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(null,"No se ha encontrado el fichero "+nameFile+EXTENSION,"Error",javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(  null,
+                                                        "No se ha encontrado el fichero "+nameFile+EXTENSION,
+                                                        "Error",
+                                                        javax.swing.JOptionPane.ERROR_MESSAGE);
             
         }
         catch(ClassNotFoundException e)
@@ -66,7 +85,11 @@ public class IOGrafo
     {
         try
         {
-            FileOutputStream fos = new FileOutputStream(nameFile+EXTENSION);
+            if(!nameFile.contains(EXTENSION))
+            {
+                nameFile += EXTENSION;
+            }
+            FileOutputStream fos = new FileOutputStream(nameFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(digrafo);
             oos.close();
@@ -75,7 +98,10 @@ public class IOGrafo
         catch(FileNotFoundException e)
         {
             e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(null,"No se ha encontrado el fichero "+nameFile+EXTENSION,"Error",javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(  null,
+                                                        "No se ha encontrado el fichero "+nameFile+EXTENSION,
+                                                        "Error",
+                                                        javax.swing.JOptionPane.ERROR_MESSAGE);
         }
         catch(IOException e)
         {
@@ -83,17 +109,21 @@ public class IOGrafo
         }
 
     }
-    /*
+    
     public static void writeTextFile(Digrafo digrafo, String nameFile)
     {
         try{
             Export2TXT textInterface = new Export2TXT(nameFile);
 
             textInterface.println("-Grafo");
-            textInterface.println(grafo.getNombre());
+            textInterface.println(digrafo.getNombre());
+            if(digrafo instanceof GrafoPonderado)
+            {
+                textInterface.println("-Unidades");
+                textInterface.println(((GrafoPonderado)digrafo).getUnidades());
+            }
 
-            textInterface.println("-Unidades");
-            textInterface.println(grafo.getUnidades());
+            
 
             textInterface.println("-Nodos");
             Iterator<Nodo> itNodos = digrafo.iteratorNodos();
@@ -102,31 +132,30 @@ public class IOGrafo
                 textInterface.println(itNodos.next().representation());
             }
             textInterface.println("-Aristas");
-            Iterator<Arista> itAristas = digrafo.iteratorAristas();
-            while(itAristas.hasNext())
+            itNodos = digrafo.iteratorNodos();
+            while(itNodos.hasNext())
             {
-                textInterface.println(itAristas.next().representation());
+                Iterator<Arista> itAristas = digrafo.iteratorAristas(itNodos.next());
+                while(itAristas.hasNext())
+                {
+                    textInterface.println(itAristas.next().representation());
+                }
             }
+            
             textInterface.println("-EOF");
 
             textInterface.close();
 
         }catch(IOException e)
         {
-            javax.swing.JOptionPane.showMessageDialog(null,"Se ha encontrado un problema a la hora de guardar el archivo","Error",javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(  null,
+                                                        "Se ha encontrado un problema a la hora de guardar el archivo",
+                                                        "Error",
+                                                        javax.swing.JOptionPane.ERROR_MESSAGE);
         }
 
     }
-    */
-    public static String getEXTENSION()
-    {
-        return EXTENSION;
-    }
-
-    public static void setEXTENSION(String extension)
-    {
-        EXTENSION = extension;
-    }
+    
 }
 
 // Constructor Detail
@@ -143,15 +172,15 @@ public class IOGrafo
 // close
 // public void close()
 
-// Ejemplo de compilaci贸n:
+// Ejemplo de compilaci髇:
 // javac -cp .;Export2TXT.jar App.java
 
-// Ejemplo de ejecuci贸n:
+// Ejemplo de ejecuci髇:
 // java -cp .;Export2TXT.jar App
 
-// El argumento -cp (CLASSPATH) sirve para indicar a la JVM la ubicaci贸n de las clases que se utilizar谩n: las nuestras (.) y las externas (separadas por ;).
+// El argumento -cp (CLASSPATH) sirve para indicar a la JVM la ubicaci髇 de las clases que se utilizar醤: las nuestras (.) y las externas (separadas por ;).
 
-// Si la ubicaci贸n del fichero JAR externo a utilizar no fuese el 
-// directorio actual, se deber铆a escribir la ruta absoluta, por ejemplo:
+// Si la ubicaci髇 del fichero JAR externo a utilizar no fuese el 
+// directorio actual, se deber韆 escribir la ruta absoluta, por ejemplo:
 
 // javac -cp .;C:\temp\Export2TXT.jar App.java
