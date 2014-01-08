@@ -732,7 +732,13 @@ public class JVentana extends JFrame
 
     private void updateTable()
     {   
-        tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel(){
+            @Override
+                public boolean isCellEditable(int row, int column) {
+                   //all cells false
+                   return false;
+                }
+        };
 
         Iterator<Nodo> itNodos = grafo.iteratorNodos();
         Vector<Nodo> nodos = new Vector<Nodo>();
