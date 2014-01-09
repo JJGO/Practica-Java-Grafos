@@ -1,0 +1,24 @@
+-Grafo
+Nodos
+-Unidades
+u
+-Nodos
+A
+B
+C
+D
+E
+-Aristas
+A C 2.0
+A B 2.0
+B D 1.0
+B A 2.0
+C D 0.5
+C E 2.0
+C A 2.0
+D C 0.5
+D E 1.0
+D B 1.0
+E C 2.0
+E D 1.0
+-EOF

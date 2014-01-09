@@ -5,6 +5,6 @@ Practica Final de Programacion Orientada a Objetos en Java. Desarrollo de una in
 
 La interfaz permite la creacion, modificacion, eliminacion y guradado de nodos y aristas que componen y sean grafos o 
 grafos ponderados. El principal objetivo es el de implementar la opcion de hallar caminos minimos entre dos puntos 
-del grafo mediante un BFS (Breath First Search).
+del grafo mediante un BFS (Breath First Search). Soporta borrado en cascada de las aristas y los nodos.
 
 Esta dotado ademas de una interfaz visual en Java mediante Swing para la gestion de grafos.

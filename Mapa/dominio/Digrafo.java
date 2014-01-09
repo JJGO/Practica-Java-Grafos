@@ -71,6 +71,11 @@ public class Digrafo implements java.io.Serializable
         boolean contenido = this.containsNodo(nodo);
         if(contenido){
             Iterator<Arista> itAristas = this.iteratorAristas(nodo);
+            while(itAristas.hasNext())
+            {
+                Arista arista = itAristas.next().reverse();
+                aristas.get(arista.getOrigen()).remove(arista); // Borra las aristas reciprocas 
+            }
             this.aristas.remove(nodo);  // Destruye el HasMap asociado
             this.nodos.remove(nodo);
         }
